@@ -18,7 +18,7 @@ maintainer Kim Stacks, kimcity@gmail.com
 
 run apt-get update
 
-run apt-get upgrade --force-yes -y
+# run apt-get upgrade --force-yes -y
 
 # install python
 run apt-get install python	--force-yes -y				## install 2.7
@@ -29,4 +29,24 @@ run apt-get install python-dev --force-yes -y 		## because ubuntu 14.04 does not
 
 
 # install nginx
+run apt-get install \
+        nginx \
+        --force-yes -y
+ 
+## copy the nginx config files
+COPY ./nginx_configuration/common.conf 		/etc/nginx/common.conf
+COPY ./nginx_configuration/fastcgi_params 	/etc/nginx/fastcgi_params
+COPY ./nginx_configuration/nginx.conf 		/etc/nginx/nginx.conf
+COPY ./nginx_configuration/php.conf 		/etc/nginx/php.conf
+COPY ./nginx_configuration/default 			/etc/nginx/sites-available/default
+COPY ./nginx_configuration/php.example 		/etc/nginx/sites-available/php.example
 
+## copy the bash_rc over
+# COPY ./bash_files/.bash_profile			/root/.bash_profile
+
+run /etc/init.d/nginx restart
+ 
+########################################
+## Remove any unwanted packages
+########################################
+run apt-get autoremove --force-yes -y
