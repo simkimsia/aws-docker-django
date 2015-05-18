@@ -40,11 +40,29 @@ COPY ./nginx_configuration/nginx.conf 		/etc/nginx/nginx.conf
 COPY ./nginx_configuration/php.conf 		/etc/nginx/php.conf
 COPY ./nginx_configuration/default 			/etc/nginx/sites-available/default
 COPY ./nginx_configuration/php.example 		/etc/nginx/sites-available/php.example
+COPY ./nginx_configuration/django-app.conf 		/etc/nginx/sites-available/django-app.conf
 
 ## copy the bash_rc over
 # COPY ./bash_files/.bash_profile			/root/.bash_profile
 
 run /etc/init.d/nginx restart
+
+
+########################################
+## Install Django 
+## and associated python modules
+########################################
+
+# Install pip
+RUN easy_install pip
+
+# Add and install Python modules
+ADD requirements.txt /src/requirements.txt
+RUN cd /src; pip install -r requirements.txt
+
+
+# Bundle app source
+ADD ./djangoapp /src
  
 ########################################
 ## Remove any unwanted packages
