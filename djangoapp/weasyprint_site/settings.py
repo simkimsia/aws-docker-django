@@ -141,7 +141,7 @@ LOGGING = {
         'file': {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
-            'filename': '/var/virtual/WebApps/virtualenvs/WeasyPrintProject/weasyprint_site/debug.log',
+            'filename': 'weasyprint_site/debug.log',
         },
     },
     'loggers': {

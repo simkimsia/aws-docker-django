@@ -27,6 +27,9 @@ run apt-get install build-essential --force-yes -y 		##
 run apt-get install python-virtualenv --force-yes -y 	## virtual env
 run apt-get install python-dev --force-yes -y 		## because ubuntu 14.04 does not have dev version of python 2
 
+## for weasyprint
+RUN apt-get install python-lxml libcairo2 libpango1.0-0 libgdk-pixbuf2.0-0 libffi-dev shared-mime-info --force-yes -y
+
 
 # install nginx
 run apt-get install \
@@ -61,8 +64,16 @@ ADD requirements.txt /src/requirements.txt
 RUN cd /src; pip install -r requirements.txt
 
 
-# Bundle app source
+# Bundle app source 
+# so the folder ./djangoapp inside the host 
+# gets copied into /src inide the container
 ADD ./djangoapp /src
+
+# give ownership of /src to www-data
+RUN chown -R www-data:www-data /src
+
+# Expose container port to host
+EXPOSE 80
  
 ########################################
 ## Remove any unwanted packages
