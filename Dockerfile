@@ -11,8 +11,10 @@
 # take base image from dockerhub
 from ubuntu:14.04
 
-
 maintainer Kim Stacks, kimcity@gmail.com
+
+## telling Ubuntu there is no terminal
+ENV DEBIAN_FRONTEND noninteractive
 
 # make sure package repository is up to date
 # this is commented out because it clashes with install build-essential
@@ -40,6 +42,8 @@ run apt-get install \
         nginx \
         --force-yes -y
 
+# install supervisor via apt-get because pip cannot work
+RUN apt-get install -y supervisor
 
 ########################################
 ## Install Django 
@@ -82,7 +86,6 @@ EXPOSE 80
 
 # supervisord == python program
 # used to keep linux packages or commands running
-
 
  
 ########################################
