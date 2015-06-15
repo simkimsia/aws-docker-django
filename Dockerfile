@@ -8,7 +8,9 @@
 # VERSION	: 0.1
 ############################################################
 
+# take base image from dockerhub
 from ubuntu:14.04
+
 
 maintainer Kim Stacks, kimcity@gmail.com
 
@@ -30,25 +32,13 @@ run apt-get install python-dev --force-yes -y 		## because ubuntu 14.04 does not
 ## for weasyprint
 RUN apt-get install python-lxml libcairo2 libpango1.0-0 libgdk-pixbuf2.0-0 libffi-dev shared-mime-info --force-yes -y
 
+## postgres dev symbols
+RUN apt-get install -y libpq-dev
 
 # install nginx
 run apt-get install \
         nginx \
         --force-yes -y
- 
-## copy the nginx config files
-COPY ./nginx_configuration/common.conf 		/etc/nginx/common.conf
-COPY ./nginx_configuration/fastcgi_params 	/etc/nginx/fastcgi_params
-COPY ./nginx_configuration/nginx.conf 		/etc/nginx/nginx.conf
-COPY ./nginx_configuration/php.conf 		/etc/nginx/php.conf
-COPY ./nginx_configuration/default 			/etc/nginx/sites-available/default
-COPY ./nginx_configuration/php.example 		/etc/nginx/sites-available/php.example
-COPY ./nginx_configuration/django-app.conf 		/etc/nginx/sites-available/django-app.conf
-
-## copy the bash_rc over
-# COPY ./bash_files/.bash_profile			/root/.bash_profile
-
-run /etc/init.d/nginx restart
 
 
 ########################################
@@ -69,13 +59,37 @@ RUN cd /src; pip install -r requirements.txt
 # gets copied into /src inide the container
 ADD ./djangoapp /src
 
+########################################
+## Config files here!
+########################################
+## run nginx in daemon mode
+RUN echo "daemon off;" >> /etc/nginx/nginx.conf
+
+## remove default nginx config
+RUN rm /etc/nginx/sites-enabled/default
+
+## symlink the config file so easier to modify
+RUN ln -s /src/../nginx_configuration/django-app.conf	/etc/nginx/sites-enabled/
+
+## symlink supervisor config file
+RUN ln -s /src/../supervisord_configuration/supervisord.conf /etc/supervisor/conf.d/
+
 # give ownership of /src to www-data
 RUN chown -R www-data:www-data /src
 
 # Expose container port to host
 EXPOSE 80
+
+# supervisord == python program
+# used to keep linux packages or commands running
+
+
  
 ########################################
 ## Remove any unwanted packages
 ########################################
 run apt-get autoremove --force-yes -y
+
+
+## default command when you startup
+CMD ['supervisord', '-n']

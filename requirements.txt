@@ -2,3 +2,5 @@ Django==1.8.1
 uwsgi==2.0.10
 django-jinja==1.4.1
 weasyprint==0.22
+psycopg2==2.6
+supervisord=3.1.3

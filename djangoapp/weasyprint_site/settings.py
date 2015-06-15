@@ -12,7 +12,11 @@ https://docs.djangoproject.com/en/1.7/ref/settings/
 import os
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
-
+try:
+    from local_settings import *
+except ImportError as e:
+    pass
+    
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.7/howto/deployment/checklist/
 
@@ -132,6 +136,14 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# user-generated content 
+MEDIA_URL = '/media/'
+
+# typically 
+# need this for production environment
+STATIC_ROOT = os.path.join(BASE_DIR, 'www', 'static')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'www', 'media')
 
 # Logging
 LOGGING = {
