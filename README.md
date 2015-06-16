@@ -12,10 +12,15 @@ Dockerized django setup on AWS
 6. RUN `boot2docker ip` #get the ip address
 
 # steps to shut down the docker image
-1. RUN `docker down <docker_instance_name>`
+1. RUN `boot2docker down <appname>`
 2. RUN `docker rm <docker_instance_name>`
 
 # steps to shutdown the boot2docker
 1. Shut down all running images
 2. RUN `boot2docker down`
 
+# how to see possible interactive 
+`docker run --name <docker_instance_name> -i -p 80:80 <appname>`
+
+# how to run docker image with environment variables
+`docker run --name myez -d -p 80:80 -e PROD=True -e ALLOWED_HOST=127.0.0.1 ez`

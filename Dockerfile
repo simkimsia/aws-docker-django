@@ -95,4 +95,4 @@ run apt-get autoremove --force-yes -y
 
 
 ## default command when you startup
-CMD ['supervisord', '-n']
+CMD ["supervisord", "-n"]
