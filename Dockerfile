@@ -16,15 +16,9 @@ maintainer Kim Stacks, kimcity@gmail.com
 ## telling Ubuntu there is no terminal
 ENV DEBIAN_FRONTEND noninteractive
 
-# make sure package repository is up to date
-# this is commented out because it clashes with install build-essential
-# run echo "deb http://archive.ubuntu.com/ubuntu trusty main universe" > /etc/apt/sources.list
-
 run apt-get update
-
-# run apt-get upgrade --force-yes -y
-
 # install python
+
 run apt-get install python	--force-yes -y				## install 2.7
 run apt-get install python-setuptools --force-yes -y 	## for python2.7 or above
 run apt-get install build-essential --force-yes -y 		##
@@ -61,7 +55,7 @@ RUN cd /src; pip install -r requirements.txt
 # Bundle app source 
 # so the folder ./djangoapp inside the host 
 # gets copied into /src inide the container
-ADD ./djangoapp /src
+ADD . /src
 
 ########################################
 ## Config files here!
@@ -73,13 +67,10 @@ RUN echo "daemon off;" >> /etc/nginx/nginx.conf
 RUN rm /etc/nginx/sites-enabled/default
 
 ## symlink the config file so easier to modify
-RUN ln -s /src/../nginx_configuration/django-app.conf	/etc/nginx/sites-enabled/
+RUN ln -s /src/nginx_configuration/django-app.conf	/etc/nginx/sites-enabled/
 
 ## symlink supervisor config file
-RUN ln -s /src/../supervisord_configuration/supervisord.conf /etc/supervisor/conf.d/
-
-# give ownership of /src to www-data
-RUN chown -R www-data:www-data /src
+RUN ln -s /src/supervisord_configuration/supervisord.conf /etc/supervisor/conf.d/
 
 # Expose container port to host
 EXPOSE 80
@@ -87,11 +78,10 @@ EXPOSE 80
 # supervisord == python program
 # used to keep linux packages or commands running
 
- 
 ########################################
 ## Remove any unwanted packages
 ########################################
-run apt-get autoremove --force-yes -y
+#run apt-get autoremove --force-yes -y
 
 
 ## default command when you startup
