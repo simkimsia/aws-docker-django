@@ -72,6 +72,10 @@ RUN ln -s /src/nginx_configuration/django-app.conf	/etc/nginx/sites-enabled/
 ## symlink supervisor config file
 RUN ln -s /src/supervisord_configuration/supervisord.conf /etc/supervisor/conf.d/
 
+## run djangostuff such as migrations and set up static 
+run cd /src/djangoapp && python manage.py collectstatic --noinput
+run cd /usr/djangoapp && python manage.py migrate --noinput
+
 # Expose container port to host
 EXPOSE 80
 
